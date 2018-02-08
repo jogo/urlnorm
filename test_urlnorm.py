@@ -1,3 +1,4 @@
+# -*- coding: utf8 -*-
 """
 this is a py.test test file
 """
@@ -42,7 +43,7 @@ def pytest_generate_tests(metafunc):
             'http://test.example/?p=%23val#test-%23-val%25': 'http://test.example/?p=%23val#test-%23-val%25',
             # check that %25 is not unescaped to %
             'http://test.example/%25/?p=val%25ue' : 'http://test.example/%25/?p=val%25ue',
-            "http://test.domain/I%C3%B1t%C3%ABrn%C3%A2ti%C3%B4n%EF%BF%BDliz%C3%A6ti%C3%B8n" : "http://test.domain/I\xc3\xb1t\xc3\xabrn\xc3\xa2ti\xc3\xb4n\xef\xbf\xbdliz\xc3\xa6ti\xc3\xb8n",
+            "http://test.domain/I%C3%B1t%C3%ABrn%C3%A2ti%C3%B4n%EF%BF%BDliz%C3%A6ti%C3%B8n" : u"http://test.domain/Iñtërnâtiôn�lizætiøn",
             # check that %20 in paths, params, query strings, and fragments are unescaped
             'http://test.example/abcde%20def?que%20ry=str%20ing#frag%20ment' : 'http://test.example/abcde def?que ry=str ing#frag ment',
             # check that spaces are collated to '+'
