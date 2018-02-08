@@ -39,6 +39,10 @@ CHANGES:
      - more fine-grained authority parsing and normalisation
 """
 
+from __future__ import absolute_import
+from six import unichr
+import six
+from six.moves import range
 __license__ = """
 Copyright (c) 1999-2002 Mark Nottingham <mnot@pobox.com>
 Copyright (c) 2010 Jehiah Czebotar <jehiah@gmail.com>
@@ -65,7 +69,7 @@ SOFTWARE.
 # also update in setup.py
 __version__ = "1.1.2.pinterest2"
 
-from urlparse import urlparse, urlunparse
+from six.moves.urllib.parse import urlparse, urlunparse, unquote
 import re
 
 class InvalidUrl(Exception):
@@ -104,8 +108,8 @@ params_unsafe_list = ' ?=+%#;'
 qs_unsafe_list = ' ?&=+%#'
 fragment_unsafe_list = ' +%#'
 path_unsafe_list = ' /?;%+#'
-_hextochr = dict(('%02x' % i, chr(i)) for i in range(256))
-_hextochr.update(('%02X' % i, chr(i)) for i in range(256))
+_hextochr = dict((b'%02x' % i, six.int2byte(i)) for i in range(256))
+_hextochr.update((b'%02X' % i, six.int2byte(i)) for i in range(256))
 
 def unquote_path(s):
     return unquote_safe(s, path_unsafe_list)
@@ -123,22 +127,23 @@ def unquote_safe(s, unsafe_list):
     """unquote percent escaped string except for percent escape sequences that are in unsafe_list"""
     # note: this build utf8 raw strings ,then does a .decode('utf8') at the end.
     # as a result it's doing .encode('utf8') on each block of the string as it's processed.
-    res = _utf8(s).split('%')
-    for i in xrange(1, len(res)):
+    unsafe_list = [_utf8(i) for i in unsafe_list]
+    res = _utf8(s).split(b'%')
+    for i in range(1, len(res)):
         item = res[i]
         try:
             raw_chr = _hextochr[item[:2]]
             if raw_chr in unsafe_list or ord(raw_chr) < 20:
                 # leave it unescaped (but uppercase the percent escape)
-                res[i] = '%' + item[:2].upper() + item[2:]
+                res[i] = b'%' + item[:2].upper() + item[2:]
             else:
                 res[i] = raw_chr + item[2:]
         except KeyError:
-            res[i] = '%' + item
+            res[i] = b'%' + item
         except UnicodeDecodeError:
             # note: i'm not sure what this does
             res[i] = unichr(int(item[:2], 16)) + item[2:]
-    o = "".join(res)
+    o = b"".join(res)
     return _unicode(o)
 
 def norm(url):
@@ -242,14 +247,14 @@ def _idn(subdomain):
 
 
 def _utf8(value):
-    if isinstance(value, unicode):
+    if isinstance(value, six.text_type):
         return value.encode("utf-8")
     assert isinstance(value, str)
     return value
 
 
 def _unicode(value):
-    if isinstance(value, str):
+    if isinstance(value, six.binary_type):
         return value.decode("utf-8")
-    assert isinstance(value, unicode)
+    assert isinstance(value, six.text_type)
     return value

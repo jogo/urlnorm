@@ -1,3 +1,4 @@
+# -*- coding: utf8 -*-
 """
 this is a py.test test file
 """
@@ -43,6 +44,7 @@ def pytest_generate_tests(metafunc):
             # check that %20 or %25 is not unescaped to ' ' or %
             'http://test.example/%25/?p=%20val%20%25' : 'http://test.example/%25/?p=%20val%20%25',
             "http://test.domain/I%C3%B1t%C3%ABrn%C3%A2ti%C3%B4n%EF%BF%BDliz%C3%A6ti%C3%B8n" : "http://test.domain/I\xc3\xb1t\xc3\xabrn\xc3\xa2ti\xc3\xb4n\xef\xbf\xbdliz\xc3\xa6ti\xc3\xb8n",
+            "http://test.domain/I%C3%B1t%C3%ABrn%C3%A2ti%C3%B4n%EF%BF%BDliz%C3%A6ti%C3%B8n" : u"http://test.domain/Iñtërnâtiôn�lizætiøn",
             # check that spaces are collated to '+'
             "http://test.example/path/with a%20space+/" : "http://test.example/path/with%20a%20space+/",
             "http://[2001:db8:1f70::999:de8:7648:6e8]/test" : "http://[2001:db8:1f70::999:de8:7648:6e8]/test", #ipv6 address
