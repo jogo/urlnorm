@@ -68,7 +68,6 @@ SOFTWARE.
 __version__ = "1.1.4"
 
 from urlparse import urlparse, urlunparse
-from string import lower
 import re
 
 
@@ -160,7 +159,7 @@ def norm(url):
 
 def norm_tuple(scheme, authority, path, parameters, query, fragment):
     """given individual url components, return its normalized form"""
-    scheme = lower(scheme)
+    scheme = scheme.lower()
     if not scheme:
         raise InvalidUrl('missing URL scheme')
     authority = norm_netloc(scheme, authority)
@@ -238,7 +237,7 @@ def norm_netloc(scheme, netloc):
     if '.' not in host and not (host[0] == '[' and host[-1] == ']'):
         raise InvalidUrl('host %r is not valid' % host)
 
-    authority = lower(host)
+    authority = host.lower()
     if 'xn--' in authority:
         subdomains = [_idn(subdomain) for subdomain in authority.split('.')]
         authority = '.'.join(subdomains)
