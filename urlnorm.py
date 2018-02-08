@@ -66,7 +66,6 @@ SOFTWARE.
 __version__ = "1.1.2.pinterest2"
 
 from urlparse import urlparse, urlunparse
-from string import lower
 import re
 
 class InvalidUrl(Exception):
@@ -151,7 +150,7 @@ def norm(url):
 
 def norm_tuple(scheme, authority, path, parameters, query, fragment):
     """given individual url components, return its normalized form"""
-    scheme = lower(scheme)
+    scheme = scheme.lower()
     if not scheme:
         raise InvalidUrl('missing URL scheme')
     authority = norm_netloc(scheme, authority)
@@ -221,7 +220,7 @@ def norm_netloc(scheme, netloc):
     if host[-1] == '.':
         host = host[:-1]
 
-    authority = lower(host)
+    authority = host.lower()
     if 'xn--' in authority:
         subdomains = [_idn(subdomain) for subdomain in authority.split('.')]
         authority = '.'.join(subdomains)
