@@ -14,4 +14,10 @@ setup(name='urlnorm',
         author_email='jehiah@gmail.com',
         url='http://github.com/jehiah/urlnorm',
         download_url="http://github.com/downloads/jehiah/urlnorm/urlnorm-%s.tar.gz" % version,
+        classifiers=[
+            'Operating System :: OS Independent',
+            'Programming Language :: Python :: 2.7',
+            'Programming Language :: Python :: 3',
+            'Programming Language :: Python :: 3.6',
+        ],
         )
