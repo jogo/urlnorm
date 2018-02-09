@@ -1,6 +1,7 @@
 """
 this is a py.test test file
 """
+from __future__ import print_function
 import urlnorm
 from urlnorm import _unicode
 
@@ -107,7 +108,7 @@ def pytest_generate_tests(metafunc):
 def test_invalid_urls(url):
     try:
         output = urlnorm.norm(url)
-        print '%r' % output
+        print('%r' % output)
     except urlnorm.InvalidUrl:
         return
     assert 1 == 0, "this should have raised an InvalidUrl exception"
