@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 # also update in urlnorm.py
-version = '1.1.2.pinterest3'
+version = '1.1.2.pinterest4'
 
 setup(name='urlnorm',
         version=version,
