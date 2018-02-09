@@ -1,6 +1,8 @@
+# -*- coding: utf8 -*-
 """
 this is a py.test test file
 """
+from __future__ import print_function
 import urlnorm
 from urlnorm import _unicode
 
@@ -20,7 +22,7 @@ def pytest_generate_tests(metafunc):
             'http://USER:pass@www.Example.COM/foo/bar': 'http://USER:pass@www.example.com/foo/bar',
             'http://www.example.com./':      'http://www.example.com/',
             'http://test.example/?a=%26&b=1': 'http://test.example/?a=%26&b=1', # should not un-encode the & that is part of a parameter value
-            'http://test.example/?a=%e3%82%82%26': 'http://test.example/?a=\xe3\x82\x82%26'.decode('utf8'), # should return a unicode character
+            'http://test.example/?a=%e3%82%82%26': u'http://test.example/?a=\u3082%26', # should return a unicode character
             # note: this breaks the internet for parameters that are positional (stupid nextel) and/or don't have an = sign
             # 'http://test.example/?a=1&b=2&a=3': 'http://test.example/?a=1&a=3&b=2', # should be in sorted/grouped order
 
@@ -29,12 +31,12 @@ def pytest_generate_tests(metafunc):
             'http://test.example?':       'http://test.example/', # with trailing /
             'http://a.COM/path/?b&a' : 'http://a.com/path/?b&a',
             # test utf8 and unicode
-            u'http://XBLA\u306eXbox.com': 'http://xbla\xe3\x81\xaexbox.com/'.decode('utf8'),
-            u'http://XBLA\u306eXbox.com'.encode('utf8'): 'http://xbla\xe3\x81\xaexbox.com/'.decode('utf8'),
-            u'http://XBLA\u306eXbox.com': 'http://xbla\xe3\x81\xaexbox.com/'.decode('utf8'),
+            u'http://XBLA\u306eXbox.com': u'http://xbla\u306exbox.com/',
+            u'http://XBLA\u306eXbox.com'.encode('utf8'): u'http://xbla\u306exbox.com/',
+            u'http://XBLA\u306eXbox.com': u'http://xbla\u306exbox.com/',
             # test idna + utf8 domain
             # u'http://xn--q-bga.XBLA\u306eXbox.com'.encode('utf8'): 'http://q\xc3\xa9.xbla\xe3\x81\xaexbox.com'.decode('utf8'),
-            'http://ja.wikipedia.org/wiki/%E3%82%AD%E3%83%A3%E3%82%BF%E3%83%94%E3%83%A9%E3%83%BC%E3%82%B8%E3%83%A3%E3%83%91%E3%83%B3': 'http://ja.wikipedia.org/wiki/\xe3\x82\xad\xe3\x83\xa3\xe3\x82\xbf\xe3\x83\x94\xe3\x83\xa9\xe3\x83\xbc\xe3\x82\xb8\xe3\x83\xa3\xe3\x83\x91\xe3\x83\xb3'.decode('utf8'),
+            'http://ja.wikipedia.org/wiki/%E3%82%AD%E3%83%A3%E3%82%BF%E3%83%94%E3%83%A9%E3%83%BC%E3%82%B8%E3%83%A3%E3%83%91%E3%83%B3': u'http://ja.wikipedia.org/wiki/\u30ad\u30e3\u30bf\u30d4\u30e9\u30fc\u30b8\u30e3\u30d1\u30f3',
             'http://test.example/\xe3\x82\xad': 'http://test.example/\xe3\x82\xad',
 
             # check that %23 (#) is not escaped where it shouldn't be
@@ -42,6 +44,7 @@ def pytest_generate_tests(metafunc):
             # check that %20 or %25 is not unescaped to ' ' or %
             'http://test.example/%25/?p=%20val%20%25' : 'http://test.example/%25/?p=%20val%20%25',
             "http://test.domain/I%C3%B1t%C3%ABrn%C3%A2ti%C3%B4n%EF%BF%BDliz%C3%A6ti%C3%B8n" : "http://test.domain/I\xc3\xb1t\xc3\xabrn\xc3\xa2ti\xc3\xb4n\xef\xbf\xbdliz\xc3\xa6ti\xc3\xb8n",
+            "http://test.domain/I%C3%B1t%C3%ABrn%C3%A2ti%C3%B4n%EF%BF%BDliz%C3%A6ti%C3%B8n" : u"http://test.domain/Iñtërnâtiôn�lizætiøn",
             # check that spaces are collated to '+'
             "http://test.example/path/with a%20space+/" : "http://test.example/path/with%20a%20space+/",
             "http://[2001:db8:1f70::999:de8:7648:6e8]/test" : "http://[2001:db8:1f70::999:de8:7648:6e8]/test", #ipv6 address
@@ -107,7 +110,7 @@ def pytest_generate_tests(metafunc):
 def test_invalid_urls(url):
     try:
         output = urlnorm.norm(url)
-        print '%r' % output
+        print('%r' % output)
     except urlnorm.InvalidUrl:
         return
     assert 1 == 0, "this should have raised an InvalidUrl exception"

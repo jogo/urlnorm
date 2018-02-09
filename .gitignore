@@ -2,6 +2,7 @@ pip-log.txt
 build
 dist
 MANIFEST
-
-__pycache__/
 *.pyc
+.pytest_cache/
+.tox/
+__pycache__/
