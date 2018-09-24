@@ -240,7 +240,7 @@ def norm_netloc(scheme, netloc):
 def _idn(subdomain):
     if subdomain.startswith('xn--'):
         try:
-            subdomain = subdomain.decode('idna')
+            subdomain = subdomain.encode().decode('idna')
         except UnicodeError:
             raise InvalidUrl('Error converting subdomain %r to IDN' % subdomain)
     return subdomain

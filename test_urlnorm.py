@@ -57,6 +57,7 @@ def pytest_generate_tests(metafunc):
             'homefeedapps://pinterest/': 'homefeedapps://pinterest/', # can handle Android deep link
             'mailto:me@pinterest.com': 'mailto:me@pinterest.com', # can handle mailto:
             "itms://itunes.apple.com/us/app/touch-pets-cats/id379475816?mt=8#23161525,,1293732683083,260430,tw" : "itms://itunes.apple.com/us/app/touch-pets-cats/id379475816?mt=8#23161525,,1293732683083,260430,tw", #can handle itms://
+            'http://www.xn--iod-dma.com': u'http://www.iod\xe9.com/'
 
         }
         for bad, good in tests.items():
